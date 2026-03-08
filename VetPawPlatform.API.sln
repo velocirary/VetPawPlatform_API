@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36221.1 d17.14
+VisualStudioVersion = 17.14.36221.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VetPawPlatform.API", "VetPawPlatformAPI\VetPawPlatform.API.csproj", "{72A209C2-8962-429D-ACA6-6BC6E36705F2}"
 EndProject
@@ -19,9 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VetPawPlatform.Domain", "Ve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VetPawPlatform.Application", "VetPawPlatform.Application\VetPawPlatform.Application.csproj", "{8196A4D9-162C-4CB7-9349-52A07E1A3BA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VetPawPlataform.Infra.DynamoDB", "VetPawPlataform.Infra.DynamoDB\VetPawPlataform.Infra.DynamoDB.csproj", "{159CFAB7-65EE-4C20-B90A-43B5E5EC9E61}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VetPawPlatform.Infra.DynamoDB", "VetPawPlataform.Infra.DynamoDB\VetPawPlatform.Infra.DynamoDB.csproj", "{159CFAB7-65EE-4C20-B90A-43B5E5EC9E61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VetPawPlataform.Tests", "VetPawPlataform.Tests\VetPawPlataform.Tests.csproj", "{88D87EAE-3580-4F17-891E-990D837E63BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VetPawPlatform.Tests", "VetPawPlataform.Tests\VetPawPlatform.Tests.csproj", "{88D87EAE-3580-4F17-891E-990D837E63BE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{0225DD8E-EBE2-46FC-9430-E7FAD672334D}"
 EndProject
