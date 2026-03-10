@@ -1,5 +1,6 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VetPawPlatform.Domain.Interfaces;
@@ -11,16 +12,22 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var awsOptions = configuration.GetAWSOptions();
+        var useLocal = configuration.GetValue<bool>("UseLocalDynamo");
+        var serviceUrl = configuration.GetValue<string>("DynamoDbServiceUrl");
 
-        if (configuration.GetValue<bool>("UseLocalDynamo"))
+        var region = configuration["AWS:Region"];
+
+        var config = new AmazonDynamoDBConfig
         {
-            _ = configuration.GetValue<string>("DynamoDbServiceUrl");
-            awsOptions.DefaultClientConfig.UseHttp = true;
-        }
+            ServiceURL = serviceUrl,
+            UseHttp = true,
+            AuthenticationRegion = region
+        };
 
-        services.AddDefaultAWSOptions(awsOptions);
-        services.AddAWSService<IAmazonDynamoDB>();
+        var credentials = new BasicAWSCredentials("local", "local");
+
+        services.AddSingleton<IAmazonDynamoDB>(new AmazonDynamoDBClient(credentials, config));
+
         services.AddSingleton<IDynamoDBContext, DynamoDBContext>();
         services.AddScoped<IPetRepository, PetRepository>();
         services.AddSingleton<DynamoDbInitializer>();

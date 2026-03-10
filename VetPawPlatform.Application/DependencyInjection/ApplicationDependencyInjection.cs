@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using VetPawPlatform.Application.UseCases.Pets.GetAllPet;
 using VetPawPlatform.Application.UseCases.Pets.GetPetById;
+using VetPawPlatform.Application.UseCases.Pets.UpdatePet;
 
 namespace VetPawPlatform.Application.DependencyInjection;
 
@@ -11,6 +12,7 @@ public static class ApplicationDependencyInjection
         services.AddScoped<CreatePetUseCase>();
         services.AddScoped<GetPetByIdUseCase>();
         services.AddScoped<GetAllPetsUseCase>();
+        services.AddScoped<UpdatePetUseCase>();
 
         return services;
     }

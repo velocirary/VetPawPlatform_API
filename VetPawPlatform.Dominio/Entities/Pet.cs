@@ -1,4 +1,5 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
+using VetPawPlatform.Domain.Enums;
 
 namespace VetPawPlatform.Domain.Entities;
 
@@ -12,12 +13,12 @@ public class Pet
     public string Name { get; set; } = string.Empty;
 
     [DynamoDBProperty]
-    public string Species { get; set; } = string.Empty;
+    public PetSpecies Species { get; set; } = PetSpecies.None;
 
     [DynamoDBProperty]
     public DateTime BirthDate { get; set; }
    
-    public Pet(string name, string species, DateTime birthDate)
+    public Pet(string name, PetSpecies species, DateTime birthDate)
     {
         Id = Guid.NewGuid();
         Name = name;
