@@ -15,7 +15,7 @@ public class PetsController(
     UpdatePetUseCase updatePet) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> Create(CreatePetDto createPetDto)
+    public async Task<IActionResult> Create([FromBody] CreatePetDto createPetDto)
     {
         var responseCreatePet = await createPet.ExecuteAsync(createPetDto);
         return CreatedAtAction(nameof(GetById), new { id = responseCreatePet.Id }, responseCreatePet);
@@ -25,10 +25,6 @@ public class PetsController(
     public async Task<IActionResult> GetById(Guid id)
     {
         var responsePetById = await getPetById.ExecuteAsync(id);
-
-        if (responsePetById == null)
-            return NotFound(new { message = $"Pet com ID {id} não encontrado." });
-
         return Ok(responsePetById);
     }
 
@@ -36,7 +32,6 @@ public class PetsController(
     public async Task<IActionResult> GetAll()
     {
         var responseAllPets = await getAllPets.ExecuteAsync();
-
         return Ok(responseAllPets);
     }
 
@@ -44,10 +39,6 @@ public class PetsController(
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdatePetDto updatePetDto)
     {
         var response = await updatePet.ExecuteAsync(id, updatePetDto);
-
-        if (response == null)
-            return NotFound(new { message = "Pet não encontrado para atualização." });
-
         return Ok(response);
     }
 }

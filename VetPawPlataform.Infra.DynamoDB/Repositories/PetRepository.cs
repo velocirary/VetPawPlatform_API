@@ -1,33 +1,60 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
 using VetPawPlatform.Domain.Entities;
+using VetPawPlatform.Domain.Enums;
 using VetPawPlatform.Domain.Interfaces;
-
-namespace VetPawPlatform.Infra.DynamoDB.Repositories;
+using VetPawPlatform.Infrastructure.Models;
 
 public class PetRepository(IDynamoDBContext context) : IPetRepository
 {
     private readonly IDynamoDBContext _context = context;
 
     public async Task CreateAsync(Pet pet)
-    {
-        if (pet.Id == Guid.Empty)
-            pet.Id = Guid.NewGuid();
-
-        await _context.SaveAsync(pet);
+    {        
+        var dbModel = MapToDbModel(pet);
+        await _context.SaveAsync(dbModel);
     }
 
     public async Task<IEnumerable<Pet>> GetAllAsync()
     {
-        return await _context.ScanAsync<Pet>([]).GetRemainingAsync();
+        var dbModels = await _context.ScanAsync<PetDbModel>([]).GetRemainingAsync();
+        
+        return dbModels.Select(petDb => Pet.Rehydrate(
+            petDb.Id,
+            petDb.Name,
+            (PetSpecies)petDb.Species,
+            DateTime.Parse(petDb.BirthDate))
+        );
     }
 
     public async Task<Pet?> GetByIdAsync(Guid id)
     {
-        return await _context.LoadAsync<Pet>(id);
+        var dbModel = await _context.LoadAsync<PetDbModel>(id);
+
+        if (dbModel == null)
+            return null;
+
+        return Pet.Rehydrate(
+            dbModel.Id,
+            dbModel.Name,
+            (PetSpecies)dbModel.Species,
+            DateTime.Parse(dbModel.BirthDate)
+        );
     }
 
     public async Task UpdateAsync(Pet pet)
-    {       
-        await _context.SaveAsync(pet);
+    {
+        var dbModel = MapToDbModel(pet);
+        await _context.SaveAsync(dbModel);
+    }
+    
+    private static PetDbModel MapToDbModel(Pet pet)
+    {
+        return new PetDbModel
+        {
+            Id = pet.Id,
+            Name = pet.Name,
+            Species = (int)pet.Species,
+            BirthDate = pet.BirthDate.ToString("O")
+        };
     }
 }
