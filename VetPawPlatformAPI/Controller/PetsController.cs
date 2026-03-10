@@ -2,6 +2,7 @@
 using VetPawPlatform.Application.Dto;
 using VetPawPlatform.Application.UseCases.Pets.GetAllPet;
 using VetPawPlatform.Application.UseCases.Pets.GetPetById;
+using VetPawPlatform.Application.UseCases.Pets.UpdatePet;
 
 namespace VetPawPlatform.API.Controller;
 
@@ -10,7 +11,8 @@ namespace VetPawPlatform.API.Controller;
 public class PetsController(
     CreatePetUseCase createPet,
     GetPetByIdUseCase getPetById,
-    GetAllPetsUseCase getAllPetsUseCase) : ControllerBase
+    GetAllPetsUseCase getAllPets,
+    UpdatePetUseCase updatePet) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> Create(CreatePetDto createPetDto)
@@ -33,8 +35,19 @@ public class PetsController(
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var responseAllPets = await getAllPetsUseCase.ExecuteAsync();
+        var responseAllPets = await getAllPets.ExecuteAsync();
 
         return Ok(responseAllPets);
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdatePetDto updatePetDto)
+    {
+        var response = await updatePet.ExecuteAsync(id, updatePetDto);
+
+        if (response == null)
+            return NotFound(new { message = "Pet não encontrado para atualização." });
+
+        return Ok(response);
     }
 }

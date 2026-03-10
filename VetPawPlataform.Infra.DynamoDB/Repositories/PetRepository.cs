@@ -25,4 +25,9 @@ public class PetRepository(IDynamoDBContext context) : IPetRepository
     {
         return await _context.LoadAsync<Pet>(id);
     }
+
+    public async Task UpdateAsync(Pet pet)
+    {       
+        await _context.SaveAsync(pet);
+    }
 }

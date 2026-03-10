@@ -1,9 +1,10 @@
 ﻿using VetPawPlatform.Domain.Entities;
+using VetPawPlatform.Domain.Enums;
 
 public record PetResponseDto(
     Guid? Id,
     string Name,
-    string Species,
+    PetSpecies Species,
     DateTime BirthDate
 )
 {

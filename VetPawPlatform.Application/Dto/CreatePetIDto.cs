@@ -1,7 +1,9 @@
-﻿namespace VetPawPlatform.Application.Dto;
+﻿using VetPawPlatform.Domain.Enums;
+
+namespace VetPawPlatform.Application.Dto;
 
 public record CreatePetDto(
     string Name,
-    string Species,
+    PetSpecies Species,
     DateTime BirthDate
 );
