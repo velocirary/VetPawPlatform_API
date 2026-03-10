@@ -4,7 +4,6 @@ using Amazon.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VetPawPlatform.Domain.Interfaces;
-using VetPawPlatform.Infra.DynamoDB.Repositories;
 
 namespace VetPawPlatform.Infra.DynamoDB.DependencyInjection;
 

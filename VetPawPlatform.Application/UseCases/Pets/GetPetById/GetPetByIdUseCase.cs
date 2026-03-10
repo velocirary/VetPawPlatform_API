@@ -1,4 +1,5 @@
-﻿using VetPawPlatform.Domain.Interfaces;
+﻿using VetPawPlatform.Domain.Exceptions;
+using VetPawPlatform.Domain.Interfaces;
 
 namespace VetPawPlatform.Application.UseCases.Pets.GetPetById;
 
@@ -9,7 +10,7 @@ public class GetPetByIdUseCase(IPetRepository repository)
         var pet = await repository.GetByIdAsync(id);
 
         if (pet == null)
-            return null;
+            throw new NotFoundException($"Pet com o id: '{id}' não encontrado");
 
         return pet;
     }

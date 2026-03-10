@@ -1,23 +1,27 @@
 using VetPawPlatform.Application.DependencyInjection;
-using VetPawPlatform.Application.UseCases.Pets.GetAllPet;
-using VetPawPlatform.Application.UseCases.Pets.GetPetById;
+using VetPawPlatform.Domain.Exceptions;
 using VetPawPlatform.Infra.DynamoDB;
 using VetPawPlatform.Infra.DynamoDB.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? [];
+var allowedOrigins = builder.Configuration
+    .GetSection("AllowedOrigins")
+    .Get<string[]>() ?? [];
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularPolicy", policy =>
     {
         policy.WithOrigins(allowedOrigins)
-             .AllowAnyMethod()
+              .AllowAnyMethod()
               .AllowAnyHeader();
     });
 });
@@ -34,14 +38,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 
     using var scope = app.Services.CreateScope();
-    var initializer = scope.ServiceProvider.GetRequiredService<DynamoDbInitializer>();
-    
+    var initializer = scope.ServiceProvider
+        .GetRequiredService<DynamoDbInitializer>();
+
     await initializer.InitializeAsync();
 }
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
 app.UseCors("AngularPolicy");
+
 app.UseAuthorization();
 
 app.MapControllers();
