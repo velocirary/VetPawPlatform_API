@@ -4,6 +4,7 @@ using Amazon.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VetPawPlatform.Domain.Interfaces;
+using VetPawPlatform.Infra.Repositories;
 
 namespace VetPawPlatform.Infra.DynamoDB.DependencyInjection;
 
@@ -27,8 +28,8 @@ public static class DependencyInjection
 
         services.AddSingleton<IAmazonDynamoDB>(new AmazonDynamoDBClient(credentials, config));
 
-        services.AddSingleton<IDynamoDBContext, DynamoDBContext>();
-        services.AddScoped<IPetRepository, PetRepository>();
+        services.AddSingleton<IDynamoDBContext, DynamoDBContext>();        
+        services.AddScoped<IOwnerRepository, OwnerRepository>();
         services.AddSingleton<DynamoDbInitializer>();
 
         return services;

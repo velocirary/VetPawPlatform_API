@@ -1,6 +1,6 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
 
-namespace VetPawPlatform.Infrastructure.Models;
+namespace VetPawPlatform.Infra.Models;
 
 [DynamoDBTable("Pets")]
 public class PetDbModel
@@ -16,4 +16,7 @@ public class PetDbModel
 
     [DynamoDBProperty]
     public string BirthDate { get; set; } = string.Empty;
+
+    [DynamoDBProperty]
+    public Guid IdOwner { get; set; }
 }
