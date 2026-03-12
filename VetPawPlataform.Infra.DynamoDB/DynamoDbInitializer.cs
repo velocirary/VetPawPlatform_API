@@ -7,26 +7,7 @@ public class DynamoDbInitializer(IAmazonDynamoDB dynamoDb)
 {
     public async Task InitializeAsync()
     {
-        await CreateTablePetsAsync();
         await CreateTableOwnersAsync();
-    }
-    private async Task CreateTablePetsAsync()
-    {
-        var tableName = "Pets";
-        var tables = await dynamoDb.ListTablesAsync();
-
-        if (tables.TableNames.Contains(tableName)) 
-            return;
-
-        var request = new CreateTableRequest
-        {
-            TableName = tableName,
-            AttributeDefinitions = [new() { AttributeName = "Id", AttributeType = ScalarAttributeType.S }],
-            KeySchema = [new() { AttributeName = "Id", KeyType = KeyType.HASH }],
-            ProvisionedThroughput = new ProvisionedThroughput { ReadCapacityUnits = 5, WriteCapacityUnits = 5 }
-        };
-
-        await dynamoDb.CreateTableAsync(request);
     }
 
     private async Task CreateTableOwnersAsync()
@@ -34,7 +15,7 @@ public class DynamoDbInitializer(IAmazonDynamoDB dynamoDb)
         var tableName = "Owners";
         var tables = await dynamoDb.ListTablesAsync();
 
-        if (tables.TableNames.Contains(tableName)) 
+        if (tables.TableNames.Contains(tableName))
             return;
 
         var request = new CreateTableRequest
