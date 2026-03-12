@@ -28,8 +28,7 @@ public static class DependencyInjection
 
         services.AddSingleton<IAmazonDynamoDB>(new AmazonDynamoDBClient(credentials, config));
 
-        services.AddSingleton<IDynamoDBContext, DynamoDBContext>();
-        services.AddScoped<IPetRepository, PetRepository>();
+        services.AddSingleton<IDynamoDBContext, DynamoDBContext>();        
         services.AddScoped<IOwnerRepository, OwnerRepository>();
         services.AddSingleton<DynamoDbInitializer>();
 

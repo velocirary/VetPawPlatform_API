@@ -4,11 +4,11 @@ using VetPawPlatform.Domain.Interfaces;
 
 namespace VetPawPlatform.Application.UseCases.Pets.GetAllPet;
 
-public class GetAllPetsUseCase(IPetRepository repository)
+public class GetAllPetsUseCase(IOwnerRepository repository)
 {
     public async Task<IEnumerable<PetResponseDto>> ExecuteAsync()
     {
-        var pets = await repository.GetAllAsync();
+        var pets = await repository.GetAllPetsAsync();
 
         return pets.Select(pet => pet.ToResponse());
     }

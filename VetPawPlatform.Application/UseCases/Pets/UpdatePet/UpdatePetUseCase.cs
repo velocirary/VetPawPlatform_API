@@ -1,25 +1,27 @@
 ﻿using VetPawPlatform.Application.Dto.Pets;
 using VetPawPlatform.Application.Mappings;
+using VetPawPlatform.Domain.Exceptions;
 using VetPawPlatform.Domain.Interfaces;
 
 namespace VetPawPlatform.Application.UseCases.Pets.UpdatePet;
 
-public class UpdatePetUseCase(IPetRepository repository)
+public class UpdatePetUseCase(IOwnerRepository repository)
 {
     public async Task<PetResponseDto?> ExecuteAsync(Guid id, UpdatePetDto dto)
     {
-        var pet = await repository.GetByIdAsync(id);
+        var petReference = await repository.GetPetByIdAsync(id) 
+                        ?? throw new DomainException($"Pet {id} não encontrado.");
 
-        if (pet == null) 
+        var owner = await repository.GetByIdAsync(petReference.OwnerId);
+
+        if (owner == null) 
             return null;
 
-        pet.UpdateDetails(
-            dto.Name, 
-            dto.Species, 
-            dto.BirthDate);
+        owner.UpdatePet(id, dto.Name, dto.Species, dto.BirthDate);
 
-        await repository.UpdateAsync(pet);
+        await repository.UpdateAsync(owner);
 
-        return pet.ToResponse();
+        var updatedPet = owner.Pets.First(pet => pet.Id == id);
+        return updatedPet.ToResponse();
     }
 }

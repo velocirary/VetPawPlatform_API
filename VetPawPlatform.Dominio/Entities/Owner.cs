@@ -1,16 +1,17 @@
-﻿using VetPawPlatform.Domain.Exceptions;
+﻿using VetPawPlatform.Domain.Enums;
+using VetPawPlatform.Domain.Exceptions;
 
 namespace VetPawPlatform.Domain.Entities;
 
 public class Owner
 {
     public Guid Id { get; set; }
-    public string Document { get; private set; } = string.Empty;    
+    public string Document { get; private set; } = string.Empty;
     public string FullName { get; private set; } = string.Empty;
     public string Email { get; private set; } = string.Empty;
     public string PhoneNumber { get; private set; } = string.Empty;
     public DateTime BirthDate { get; private set; }
-    
+
     private readonly List<Pet> _pets = [];
     public IReadOnlyCollection<Pet> Pets => _pets;
 
@@ -31,30 +32,47 @@ public class Owner
         Validate(document, fullName, email, phoneNumber, birthDate);
 
         FullName = fullName;
-        Email = email;        
+        Email = email;
         PhoneNumber = phoneNumber;
         BirthDate = birthDate;
     }
 
     public void AddPet(Pet pet)
     {
-        if (pet == null) 
+        if (pet == null)
             throw new DomainException("O pet não pode ser nulo.");
+
+        if (_pets.Any(pets => pets.Id == pet.Id)) 
+            return;
 
         _pets.Add(pet);
     }
 
-    public static Owner Rehydrate(Guid id, string document, string fullName, string email, string phoneNumber, DateTime birthDate)
+    public void UpdatePet(Guid petId, string name, PetSpecies species, DateTime birthDate)
     {
-        return new Owner
+        var pet = _pets.FirstOrDefault(pet => pet.Id == petId) 
+            ?? throw new DomainException("Pet não encontrado neste tutor.");
+
+        pet.UpdateDetails(name, species, birthDate);
+    }
+
+    public static Owner Rehydrate(Guid id, string document, string fullName, string email, string phoneNumber, DateTime birthDate, IEnumerable<Pet>? pets = null)
+    {
+        var owner = new Owner
         {
             Id = id,
             Document = document,
             FullName = fullName,
-            Email = email,            
+            Email = email,
             PhoneNumber = phoneNumber,
             BirthDate = birthDate
         };
+
+        if (pets != null)
+            foreach (var pet in pets)
+                owner.AddPet(pet);
+
+        return owner;
     }
 
     private static void Validate(string document, string fullName, string email, string phoneNumber, DateTime birthDate)

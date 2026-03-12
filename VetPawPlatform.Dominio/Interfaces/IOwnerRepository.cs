@@ -4,8 +4,11 @@ namespace VetPawPlatform.Domain.Interfaces;
 
 public interface IOwnerRepository
 {
-    Task CreateAsync(Owner pet);
-    Task<Owner?> GetByDocumentAsync(string document);
+    Task CreateAsync(Owner owner);
+    Task UpdateAsync(Owner owner);
     Task<Owner?> GetByIdAsync(Guid id);
-    Task<IEnumerable<Owner>> GetAllAsync();
+    Task<Owner?> GetByDocumentAsync(string document);
+    Task<IEnumerable<Owner>> GetAllAsync();    
+    Task<IEnumerable<Pet>> GetAllPetsAsync();
+    Task<Pet?> GetPetByIdAsync(Guid petId);
 }

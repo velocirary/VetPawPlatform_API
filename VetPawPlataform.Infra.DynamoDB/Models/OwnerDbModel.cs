@@ -22,4 +22,7 @@ public class OwnerDbModel
 
     [DynamoDBProperty]
     public string BirthDate { get; set; } = string.Empty;
+
+    [DynamoDBProperty]
+    public List<PetDbModel> Pets { get; set; } = [];
 }

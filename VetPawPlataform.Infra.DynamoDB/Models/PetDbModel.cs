@@ -17,6 +17,6 @@ public class PetDbModel
     [DynamoDBProperty]
     public string BirthDate { get; set; } = string.Empty;
 
-    [DynamoDBHashKey]
+    [DynamoDBProperty]
     public Guid IdOwner { get; set; }
 }

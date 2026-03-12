@@ -1,19 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VetPawPlatform.Application.Dto.Owners;
-using VetPawPlatform.Application.UseCases.Pets.GetPetById;
+using VetPawPlatform.Application.Dto.Pets;
+using VetPawPlatform.Application.UseCases.Owners.AddPetToOwner;
+using VetPawPlatform.Application.UseCases.Owners.CreateOwner;
+using VetPawPlatform.Application.UseCases.Owners.GetAllOwner;
+using VetPawPlatform.Application.UseCases.Owners.GetOwnerById;
+using VetPawPlatform.Application.UseCases.Owners.UpdateOwner;
 
 namespace VetPawPlatform.API.Controller;
 
 [ApiController]
-[Route("api/owner")]
+[Route("api/owners")]
 public class OwnerController(
     CreateOwnerUseCase createOwner,
-    GetPetByIdUseCase getOwnerById) : ControllerBase
+    GetOwnerByIdUseCase getOwnerById,
+    GetAllOwnerUseCase getAllOwner,
+    UpdateOwnerUseCase updateOwner,
+    AddPetToOwnerUseCase addPetToOwner) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateOwnerDto createPetDto)
+    public async Task<IActionResult> Create([FromBody] CreateOwnerDto createOwnerDto)
     {
-        var responseCreateOwner = await createOwner.ExecuteAsync(createPetDto);
+        var responseCreateOwner = await createOwner.ExecuteAsync(createOwnerDto);
         return CreatedAtAction(nameof(GetById), new { id = responseCreateOwner.Id }, responseCreateOwner);
     }
 
@@ -22,5 +30,26 @@ public class OwnerController(
     {
         var responseOwnerById = await getOwnerById.ExecuteAsync(id);
         return Ok(responseOwnerById);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var response = await getAllOwner.ExecuteAsync();
+        return Ok(response);
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOwnerDto dto)
+    {
+        var response = await updateOwner.ExecuteAsync(id, dto);
+        return Ok(response);
+    }
+
+    [HttpPost("{ownerId}/pets")]
+    public async Task<IActionResult> AddPet(Guid ownerId, [FromBody] CreatePetDto dto)
+    {
+        var result = await addPetToOwner.ExecuteAsync(ownerId, dto);
+        return Ok(result);
     }
 }
