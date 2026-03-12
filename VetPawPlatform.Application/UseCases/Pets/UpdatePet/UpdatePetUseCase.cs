@@ -1,4 +1,5 @@
-﻿using VetPawPlatform.Application.Dto;
+﻿using VetPawPlatform.Application.Dto.Pets;
+using VetPawPlatform.Application.Mappings;
 using VetPawPlatform.Domain.Interfaces;
 
 namespace VetPawPlatform.Application.UseCases.Pets.UpdatePet;
@@ -19,6 +20,6 @@ public class UpdatePetUseCase(IPetRepository repository)
 
         await repository.UpdateAsync(pet);
 
-        return pet;
+        return pet.ToResponse();
     }
 }

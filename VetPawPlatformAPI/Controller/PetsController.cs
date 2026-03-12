@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using VetPawPlatform.Application.Dto;
+using VetPawPlatform.Application.Dto.Pets;
+using VetPawPlatform.Application.UseCases.Pets.CreatePet;
 using VetPawPlatform.Application.UseCases.Pets.GetAllPet;
 using VetPawPlatform.Application.UseCases.Pets.GetPetById;
 using VetPawPlatform.Application.UseCases.Pets.UpdatePet;

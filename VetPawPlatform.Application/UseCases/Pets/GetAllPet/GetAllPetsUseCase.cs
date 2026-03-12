@@ -1,4 +1,6 @@
-﻿using VetPawPlatform.Domain.Interfaces;
+﻿using VetPawPlatform.Application.Dto.Pets;
+using VetPawPlatform.Application.Mappings;
+using VetPawPlatform.Domain.Interfaces;
 
 namespace VetPawPlatform.Application.UseCases.Pets.GetAllPet;
 
@@ -8,6 +10,6 @@ public class GetAllPetsUseCase(IPetRepository repository)
     {
         var pets = await repository.GetAllAsync();
 
-        return pets.Select(pet => (PetResponseDto)pet);
+        return pets.Select(pet => pet.ToResponse());
     }
 }

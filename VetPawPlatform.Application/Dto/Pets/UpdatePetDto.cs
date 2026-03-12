@@ -1,5 +1,6 @@
-﻿namespace VetPawPlatform.Application.Dto;
-using VetPawPlatform.Domain.Enums;
+﻿using VetPawPlatform.Domain.Enums;
+
+namespace VetPawPlatform.Application.Dto.Pets;
 
 public record UpdatePetDto(
     string Name,

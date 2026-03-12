@@ -2,7 +2,9 @@
 using VetPawPlatform.Domain.Entities;
 using VetPawPlatform.Domain.Enums;
 using VetPawPlatform.Domain.Interfaces;
-using VetPawPlatform.Infrastructure.Models;
+using VetPawPlatform.Infra.Models;
+
+namespace VetPawPlatform.Infra.Repositories;
 
 public class PetRepository(IDynamoDBContext context) : IPetRepository
 {
@@ -20,6 +22,7 @@ public class PetRepository(IDynamoDBContext context) : IPetRepository
         
         return dbModels.Select(petDb => Pet.Rehydrate(
             petDb.Id,
+            petDb.IdOwner,
             petDb.Name,
             (PetSpecies)petDb.Species,
             DateTime.Parse(petDb.BirthDate))
@@ -35,6 +38,7 @@ public class PetRepository(IDynamoDBContext context) : IPetRepository
 
         return Pet.Rehydrate(
             dbModel.Id,
+            dbModel.IdOwner,
             dbModel.Name,
             (PetSpecies)dbModel.Species,
             DateTime.Parse(dbModel.BirthDate)
