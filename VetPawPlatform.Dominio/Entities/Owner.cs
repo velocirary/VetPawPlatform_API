@@ -1,23 +1,24 @@
-﻿using VetPawPlatform.Domain.Enums;
+﻿using VetPawPlatform.Domain.ValueObjects;
 using VetPawPlatform.Domain.Exceptions;
+using VetPawPlatform.Domain.Enums;
 
 namespace VetPawPlatform.Domain.Entities;
 
 public class Owner
 {
-    public Guid Id { get; set; }
-    public string Document { get; private set; } = string.Empty;
-    public string FullName { get; private set; } = string.Empty;
-    public string Email { get; private set; } = string.Empty;
-    public string PhoneNumber { get; private set; } = string.Empty;
+    public Guid Id { get; private set; }
+    public Cpf Document { get; private set; } = null!;
+    public Name FullName { get; private set; } = null!;
+    public Email Email { get; private set; } = null!;
+    public Phone PhoneNumber { get; private set; } = null!;
     public DateTime BirthDate { get; private set; }
 
     private readonly List<Pet> _pets = [];
     public IReadOnlyCollection<Pet> Pets => _pets;
 
-    public Owner(string document, string fullName, string email, string phoneNumber, DateTime birthDate)
+    public Owner(Cpf document, Name fullName, Email email, Phone phoneNumber, DateTime birthDate)
     {
-        Validate(document, fullName, email, phoneNumber, birthDate);
+        ValidateAge(birthDate);
 
         Id = Guid.NewGuid();
         Document = document;
@@ -27,14 +28,21 @@ public class Owner
         BirthDate = birthDate;
     }
 
-    public void UpdateDetails(string document, string fullName, string email, string phoneNumber, DateTime birthDate)
+    public void UpdateDetails(Cpf document, Name fullName, Email email, Phone phoneNumber, DateTime birthDate)
     {
-        Validate(document, fullName, email, phoneNumber, birthDate);
+        ValidateAge(birthDate);
 
+        Document = document;
         FullName = fullName;
         Email = email;
         PhoneNumber = phoneNumber;
         BirthDate = birthDate;
+    }
+
+    private static void ValidateAge(DateTime birthDate)
+    {
+        if (birthDate > DateTime.UtcNow.AddYears(-18))
+            throw new DomainException("O tutor deve ser maior de 18 anos.");
     }
 
     public void AddPet(Pet pet)
@@ -48,7 +56,7 @@ public class Owner
         _pets.Add(pet);
     }
 
-    public void UpdatePet(Guid petId, string name, PetSpecies species, DateTime birthDate)
+    public void UpdatePet(Guid petId, Name name, PetSpecies species, DateTime birthDate)
     {
         var pet = _pets.FirstOrDefault(pet => pet.Id == petId) 
             ?? throw new DomainException("Pet não encontrado neste tutor.");
@@ -56,7 +64,7 @@ public class Owner
         pet.UpdateDetails(name, species, birthDate);
     }
 
-    public static Owner Rehydrate(Guid id, string document, string fullName, string email, string phoneNumber, DateTime birthDate, IEnumerable<Pet>? pets = null)
+    public static Owner Rehydrate(Guid id, Cpf document, Name fullName, Email email, Phone phoneNumber, DateTime birthDate, IEnumerable<Pet>? pets = null)
     {
         var owner = new Owner
         {
@@ -73,24 +81,6 @@ public class Owner
                 owner.AddPet(pet);
 
         return owner;
-    }
-
-    private static void Validate(string document, string fullName, string email, string phoneNumber, DateTime birthDate)
-    {
-        if (string.IsNullOrWhiteSpace(document))
-            throw new DomainException("O documento (CPF) é obrigatório.");
-
-        if (string.IsNullOrWhiteSpace(fullName) || fullName == "string")
-            throw new DomainException("O nome completo é obrigatório.");
-
-        if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
-            throw new DomainException("E-mail inválido.");
-
-        if (string.IsNullOrWhiteSpace(phoneNumber))
-            throw new DomainException("O telefone de contato é obrigatório.");
-
-        if (birthDate > DateTime.UtcNow.AddYears(-18))
-            throw new DomainException("O tutor deve ser maior de 18 anos.");
     }
 
     private Owner() { }

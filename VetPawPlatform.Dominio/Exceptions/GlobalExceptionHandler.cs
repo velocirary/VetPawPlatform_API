@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Net;
 using ValidationException = FluentValidation.ValidationException;
 
@@ -32,7 +35,9 @@ public class GlobalExceptionHandler : IExceptionHandler
                 httpContext,
                 HttpStatusCode.InternalServerError,
                 "Erro interno inesperado",
-                "Ocorreu um erro interno inesperado."
+                httpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment()
+                        ? exception.ToString()
+                        : "Ocorreu um erro interno inesperado."
             )
         };
 

@@ -14,7 +14,7 @@ public class OwnerDbModel
     [DynamoDBProperty]
     public string Email { get; set; } = string.Empty;
 
-    [DynamoDBProperty]
+    [DynamoDBGlobalSecondaryIndexHashKey("Document-Index")]
     public string Document { get; set; } = string.Empty;
 
     [DynamoDBProperty]
