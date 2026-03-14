@@ -29,6 +29,10 @@ public class OwnerController(
     public async Task<IActionResult> GetById(Guid id)
     {
         var responseOwnerById = await getOwnerById.ExecuteAsync(id);
+
+        if (responseOwnerById == null)
+            return NotFound(new { message = "Tutor não encontrado." });
+
         return Ok(responseOwnerById);
     }
 
@@ -42,8 +46,12 @@ public class OwnerController(
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOwnerDto dto)
     {
-        var response = await updateOwner.ExecuteAsync(id, dto);
-        return Ok(response);
+        var responseUpdate = await updateOwner.ExecuteAsync(id, dto);
+
+        if (responseUpdate == null)
+            return NotFound(new { message = "Tutor não encontrado para atualização." });
+
+        return Ok(responseUpdate);
     }
 
     [HttpPost("{ownerId}/pets")]

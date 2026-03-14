@@ -21,33 +21,29 @@ public class DynamoDbInitializer(IAmazonDynamoDB dynamoDb)
         var request = new CreateTableRequest
         {
             TableName = tableName,
-            AttributeDefinitions =
-            [
-                new() { AttributeName = "Id", AttributeType = ScalarAttributeType.S },
-                new() { AttributeName = "Document", AttributeType = ScalarAttributeType.S }
-            ],
+            AttributeDefinitions = new List<AttributeDefinition>
+        {
+            new() { AttributeName = "Id", AttributeType = ScalarAttributeType.S },
+            new() { AttributeName = "Document", AttributeType = ScalarAttributeType.S }
+        },
             KeySchema =
-            [
-                new() { AttributeName = "Id", KeyType = KeyType.HASH }
-            ],
+        [
+            new() { AttributeName = "Id", KeyType = KeyType.HASH }
+        ],
             GlobalSecondaryIndexes =
-            [
-                new GlobalSecondaryIndex
-                {
-                    IndexName = "Document-Index",
-                    KeySchema =
-                    [
-                        new KeySchemaElement { AttributeName = "Document", KeyType = KeyType.HASH }
-                    ],
-                    Projection = new Projection { ProjectionType = ProjectionType.ALL },
-                    ProvisionedThroughput = new ProvisionedThroughput { ReadCapacityUnits = 5, WriteCapacityUnits = 5 }
-                }
-            ],
-            ProvisionedThroughput = new ProvisionedThroughput
+        [
+            new()
             {
-                ReadCapacityUnits = 5,
-                WriteCapacityUnits = 5
+                IndexName = "Document-Index",
+                KeySchema =
+                [
+                    new() { AttributeName = "Document", KeyType = KeyType.HASH }
+                ],
+                Projection = new Projection { ProjectionType = ProjectionType.ALL },
+                ProvisionedThroughput = new ProvisionedThroughput { ReadCapacityUnits = 5, WriteCapacityUnits = 5 }
             }
+        ],
+            ProvisionedThroughput = new ProvisionedThroughput { ReadCapacityUnits = 5, WriteCapacityUnits = 5 }
         };
 
         await dynamoDb.CreateTableAsync(request);

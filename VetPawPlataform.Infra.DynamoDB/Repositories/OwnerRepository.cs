@@ -1,10 +1,11 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
 using VetPawPlatform.Domain.Entities;
 using VetPawPlatform.Domain.Enums;
 using VetPawPlatform.Domain.Interfaces;
 using VetPawPlatform.Infra.Models;
 
-namespace VetPawPlatform.Infra.Repositories;
+namespace VetPawPlatform.Infra.DynamoDB.Repositories;
 
 public class OwnerRepository(IDynamoDBContext context) : IOwnerRepository
 {
@@ -35,13 +36,16 @@ public class OwnerRepository(IDynamoDBContext context) : IOwnerRepository
     }
 
     public async Task<Owner?> GetByDocumentAsync(string document)
-    {
-        var conditions = new List<ScanCondition>
+    {        
+        var queryConfig = new QueryOperationConfig
         {
-            new("Document", Amazon.DynamoDBv2.DocumentModel.ScanOperator.Equal, document)
+            IndexName = "Document-Index",
+            Filter = new QueryFilter("Document", QueryOperator.Equal, document)
         };
 
-        var results = await _context.ScanAsync<OwnerDbModel>(conditions).GetRemainingAsync();
+        var search = _context.FromQueryAsync<OwnerDbModel>(queryConfig);
+
+        var results = await search.GetRemainingAsync();
         var ownerDb = results.FirstOrDefault();
 
         return ownerDb == null ? null : MapToDomain(ownerDb);
@@ -50,7 +54,6 @@ public class OwnerRepository(IDynamoDBContext context) : IOwnerRepository
     public async Task<IEnumerable<Pet>> GetAllPetsAsync()
     {
         var owners = await _context.ScanAsync<OwnerDbModel>([]).GetRemainingAsync();
-
         return owners.SelectMany(owner => owner.Pets.Select(pet => MapPetToDomain(pet, owner.Id)));
     }
 
@@ -82,14 +85,14 @@ public class OwnerRepository(IDynamoDBContext context) : IOwnerRepository
         );
     }
 
-    private static Pet MapPetToDomain(PetDbModel p, Guid ownerId)
+    private static Pet MapPetToDomain(PetDbModel petDbModel, Guid ownerId)
     {
         return Pet.Rehydrate(
-            p.Id,
+            petDbModel.Id,
             ownerId,
-            p.Name,
-            (PetSpecies)p.Species,
-            DateTime.Parse(p.BirthDate)
+            petDbModel.Name,
+            (PetSpecies)petDbModel.Species,
+            DateTime.Parse(petDbModel.BirthDate)
         );
     }
 
@@ -99,8 +102,8 @@ public class OwnerRepository(IDynamoDBContext context) : IOwnerRepository
         {
             Id = owner.Id,
             FullName = owner.FullName,
-            Document = owner.Document,
-            Email = owner.Email,
+            Document = owner.Document.Number,
+            Email = owner.Email.Address,
             PhoneNumber = owner.PhoneNumber,
             BirthDate = owner.BirthDate.ToString("O"),
             Pets = [.. owner.Pets.Select(pet => new PetDbModel

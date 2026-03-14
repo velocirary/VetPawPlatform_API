@@ -1,7 +1,7 @@
 ﻿using VetPawPlatform.Application.Dto.Owners;
+using VetPawPlatform.Domain.Entities;
 using VetPawPlatform.Domain.Exceptions;
 using VetPawPlatform.Domain.Interfaces;
-using VetPawPlatform.Domain.Entities;
 
 namespace VetPawPlatform.Application.UseCases.Owners.CreateOwner;
 
