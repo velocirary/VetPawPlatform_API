@@ -50,7 +50,10 @@ public class Owner
         if (pet == null)
             throw new DomainException("O pet não pode ser nulo.");
 
-        if (_pets.Any(pets => pets.Id == pet.Id)) 
+        if (pet.OwnerId != Id)
+            throw new DomainException("Este pet não pertence a este tutor.");
+
+        if (_pets.Any(pet => pet.Id == pet.Id))
             return;
 
         _pets.Add(pet);
