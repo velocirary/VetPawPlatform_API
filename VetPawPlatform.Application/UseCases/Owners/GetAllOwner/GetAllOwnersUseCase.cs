@@ -7,8 +7,8 @@ public class GetAllOwnerUseCase(IOwnerRepository repository)
 {
     public async Task<IEnumerable<OwnerResponseDto>> ExecuteAsync()
     {
-        var owner = await repository.GetAllAsync();
+        var owners = await repository.GetAllAsync();
 
-        return owner.Select(owner => (OwnerResponseDto)owner);
+        return owners.Select(owner => (OwnerResponseDto)owner);
     }
 }
