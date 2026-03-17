@@ -5,6 +5,7 @@ using VetPawPlatform.Application.UseCases.Owners.AddPetToOwner;
 using VetPawPlatform.Application.UseCases.Owners.CreateOwner;
 using VetPawPlatform.Application.UseCases.Owners.GetAllOwner;
 using VetPawPlatform.Application.UseCases.Owners.GetOwnerById;
+using VetPawPlatform.Application.UseCases.Owners.RemovePetFromOwner;
 using VetPawPlatform.Application.UseCases.Owners.UpdateOwner;
 
 namespace VetPawPlatform.API.Controller;
@@ -16,7 +17,8 @@ public class OwnerController(
     GetOwnerByIdUseCase getOwnerById,
     GetAllOwnerUseCase getAllOwner,
     UpdateOwnerUseCase updateOwner,
-    AddPetToOwnerUseCase addPetToOwner) : ControllerBase
+    AddPetToOwnerUseCase addPetToOwner,
+    RemovePetFromOwnerUseCase removePetFromOwner) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateOwnerDto createOwnerDto)
@@ -59,5 +61,12 @@ public class OwnerController(
     {
         var result = await addPetToOwner.ExecuteAsync(ownerId, dto);
         return Ok(result);
+    }
+
+    [HttpDelete("{ownerId}/pets/{petId}")]
+    public async Task<IActionResult> RemovePet(Guid ownerId, Guid petId)
+    {
+        await removePetFromOwner.ExecuteAsync(ownerId, petId);
+        return NoContent();
     }
 }

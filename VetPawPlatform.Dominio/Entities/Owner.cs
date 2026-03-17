@@ -61,10 +61,18 @@ public class Owner
 
     public void UpdatePet(Guid petId, Name name, PetSpecies species, DateTime birthDate)
     {
-        var pet = _pets.FirstOrDefault(pet => pet.Id == petId) 
+        var pet = _pets.FirstOrDefault(p => p.Id == petId) 
             ?? throw new DomainException("Pet não encontrado neste tutor.");
 
         pet.UpdateDetails(name, species, birthDate);
+    }
+
+    public void RemovePet(Guid petId)
+    {
+        var pet = _pets.FirstOrDefault(pet => pet.Id == petId)
+            ?? throw new DomainException("Pet não encontrado para este tutor.");
+
+        _pets.Remove(pet);
     }
 
     public static Owner Rehydrate(Guid id, Cpf document, Name fullName, Email email, Phone phoneNumber, DateTime birthDate, IEnumerable<Pet>? pets = null)
