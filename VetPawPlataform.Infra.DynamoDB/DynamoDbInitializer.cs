@@ -64,8 +64,7 @@ public class DynamoDbInitializer(IAmazonDynamoDB dynamoDb)
             AttributeDefinitions =
             [
                 new() { AttributeName = "Id", AttributeType = ScalarAttributeType.S },
-                new() { AttributeName = "PetId", AttributeType = ScalarAttributeType.S },
-                new() { AttributeName = "OwnerId", AttributeType = ScalarAttributeType.S }
+                new() { AttributeName = "PetId", AttributeType = ScalarAttributeType.S }                
             ],
             KeySchema =
             [

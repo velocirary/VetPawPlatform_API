@@ -1,7 +1,7 @@
 ﻿using VetPawPlatform.Application.Dto.Appointments;
 using VetPawPlatform.Domain.Interfaces;
 
-namespace VetPawPlatform.Application.UseCases.Appointment.GetAllAppointment;
+namespace VetPawPlatform.Application.UseCases.Appointments.GetAllAppointment;
 
 public class GetAllAppointmentUseCase(IAppointmentRepository repository)
 {

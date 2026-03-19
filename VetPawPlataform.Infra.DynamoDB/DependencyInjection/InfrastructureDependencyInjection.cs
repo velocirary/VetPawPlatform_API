@@ -30,6 +30,7 @@ public static class DependencyInjection
 
         services.AddSingleton<IDynamoDBContext, DynamoDBContext>();        
         services.AddScoped<IOwnerRepository, OwnerRepository>();
+        services.AddScoped<IAppointmentRepository, AppointmentRepository>();
         services.AddSingleton<DynamoDbInitializer>();
 
         return services;
