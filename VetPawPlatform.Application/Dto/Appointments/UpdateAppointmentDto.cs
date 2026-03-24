@@ -2,9 +2,9 @@
 
 namespace VetPawPlatform.Application.Dto.Appointments;
 
-public record class UpdateAppointmentDto(    
+public record class UpdateAppointmentDto(
     Guid PetId,
     DateTime Date,
-    string? Reason,
+    string Reason,
     AppointmentStatus Status
 );

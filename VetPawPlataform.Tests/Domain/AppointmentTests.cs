@@ -1,8 +1,7 @@
 ﻿using FluentAssertions;
-using FluentAssertions.Execution;
-using global::VetPawPlatform.Domain.Enums;
-using global::VetPawPlatform.Domain.Exceptions;
-using global::VetPawPlatform.Tests.Builders;
+using VetPawPlatform.Domain.Enums;
+using VetPawPlatform.Domain.Exceptions;
+using VetPawPlatform.Tests.Builders;
 
 namespace VetPawPlatform.Tests.Domain;
 
@@ -32,42 +31,23 @@ public class AppointmentTests
     }
 
     [Fact]
-    public void UpdateDetails_ShouldUpdateAppointmentCorrectly()
+    public void Reschedule_ShouldUpdateDate_WhenValid()
     {
         var appointment = AppointmentBuilder.New().Build();
+        var newDate = DateTime.UtcNow.AddDays(3);
 
-        var newDate = DateTime.UtcNow.AddDays(2);
-        var newReason = "Consulta de rotina";
-        var newStatus = AppointmentStatus.Completed;
+        appointment.Reschedule(newDate);
 
-        appointment.UpdateDetails(
-            Guid.NewGuid(),
-            newDate,
-            newReason,
-            newStatus
-        );
-
-        using (new AssertionScope())
-        {
-            appointment.Date.Should().Be(newDate);
-            appointment.Reason.Should().Be(newReason);
-            appointment.Status.Should().Be(newStatus);
-        }
+        appointment.Date.Should().Be(newDate);
     }
 
     [Fact]
-    public void UpdateDetails_ShouldThrowException_WhenDateIsInThePast()
+    public void Reschedule_ShouldThrowException_WhenDateIsInThePast()
     {
         var appointment = AppointmentBuilder.New().Build();
-
         var pastDate = DateTime.UtcNow.AddDays(-1);
 
-        Action action = () => appointment.UpdateDetails(
-            Guid.NewGuid(),
-            pastDate,
-            "Motivo",
-            AppointmentStatus.Scheduled
-        );
+        Action action = () => appointment.Reschedule(pastDate);
 
         action.Should()
             .Throw<DomainException>()
@@ -75,22 +55,75 @@ public class AppointmentTests
     }
 
     [Fact]
-    public void UpdateDetails_ShouldThrowException_WhenStatusTransitionIsInvalid()
+    public void ChangeReason_ShouldUpdateReason_WhenValid()
     {
-        var appointment = AppointmentBuilder.New()
-            .WithStatus(AppointmentStatus.Completed)
-            .Build();
+        var appointment = AppointmentBuilder.New().Build();
+        var newReason = "Consulta de rotina";
 
-        Action action = () => appointment.UpdateDetails(
-            Guid.NewGuid(),
-            DateTime.UtcNow.AddDays(1),
-            "Novo motivo",
-            AppointmentStatus.Scheduled
-        );
+        appointment.ChangeReason(newReason);
+
+        appointment.Reason.Should().Be(newReason);
+    }
+
+    [Fact]
+    public void ChangeReason_ShouldThrowException_WhenReasonIsTooLong()
+    {
+        var appointment = AppointmentBuilder.New().Build();
+        var longReason = new string('a', 201);
+
+        Action action = () => appointment.ChangeReason(longReason);
 
         action.Should()
             .Throw<DomainException>()
-            .WithMessage("Não é possível alterar um agendamento concluído.");
+            .WithMessage("O motivo deve ter no máximo 200 caracteres.");
+    }
+
+    [Fact]
+    public void Complete_ShouldChangeStatus_WhenValid()
+    {
+        var appointment = AppointmentBuilder.New().Build();
+
+        appointment.Complete();
+
+        appointment.Status.Should().Be(AppointmentStatus.Completed);
+    }
+
+    [Fact]
+    public void Complete_ShouldThrowException_WhenAlreadyCompleted()
+    {
+        var appointment = AppointmentBuilder.New()
+            .WithStatus(AppointmentStatus.Completed)
+            .BuildRehydrated();
+
+        Action action = () => appointment.Complete();
+
+        action.Should()
+            .Throw<DomainException>()
+            .WithMessage("O agendamento já está concluído.");
+    }
+
+    [Fact]
+    public void Cancel_ShouldChangeStatus_WhenValid()
+    {
+        var appointment = AppointmentBuilder.New().Build();
+
+        appointment.Cancel();
+
+        appointment.Status.Should().Be(AppointmentStatus.Cancelled);
+    }
+
+    [Fact]
+    public void Cancel_ShouldThrowException_WhenAlreadyCompleted()
+    {
+        var appointment = AppointmentBuilder.New()
+            .WithStatus(AppointmentStatus.Completed)
+            .BuildRehydrated();
+
+        Action action = () => appointment.Cancel();
+
+        action.Should()
+            .Throw<DomainException>()
+            .WithMessage("Não é possível cancelar um agendamento concluído.");
     }
 
     [Fact]
@@ -103,6 +136,5 @@ public class AppointmentTests
             .BuildRehydrated();
 
         appointment.Id.Should().Be(id);
-
     }
 }

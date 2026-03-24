@@ -1,5 +1,4 @@
-﻿using VetPawPlatform.Domain.Entities;
-using VetPawPlatform.Domain.Enums;
+﻿using VetPawPlatform.Domain.Enums;
 
 namespace VetPawPlatform.Tests.Builders;
 
@@ -20,8 +19,7 @@ public class AppointmentBuilder
             _petId,
             _ownerId,
             _date,
-            _reason,
-            _status
+            _reason           
         );
     }
     public AppointmentBuilder WithId(Guid id)
