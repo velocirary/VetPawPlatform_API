@@ -1,4 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using VetPawPlatform.Application.UseCases.Appointments.CreateAppointment;
+using VetPawPlatform.Application.UseCases.Appointments.GetAllAppointment;
+using VetPawPlatform.Application.UseCases.Appointments.GetAppointmentById;
+using VetPawPlatform.Application.UseCases.Appointments.UpdateAppointment;
 using VetPawPlatform.Application.UseCases.Owners.AddPetToOwner;
 using VetPawPlatform.Application.UseCases.Owners.CreateOwner;
 using VetPawPlatform.Application.UseCases.Owners.GetAllOwner;
@@ -22,6 +26,10 @@ public static class ApplicationDependencyInjection
         services.AddScoped<GetAllOwnerUseCase>();
         services.AddScoped<UpdateOwnerUseCase>();
         services.AddScoped<AddPetToOwnerUseCase>();
+        services.AddScoped<CreateAppointmentUseCase>();
+        services.AddScoped<GetAppointmentByIdUseCase>();
+        services.AddScoped<GetAllAppointmentUseCase>();
+        services.AddScoped<UpdateAppointmentUseCase>();        
 
         return services;
     }
