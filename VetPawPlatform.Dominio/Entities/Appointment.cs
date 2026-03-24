@@ -26,6 +26,9 @@ public class Appointment
 
     public void UpdateDetails(Guid petId, DateTime date, string reason, AppointmentStatus status)
     {
+        if (Status == AppointmentStatus.Completed)
+            throw new DomainException("Não é possível alterar um agendamento concluído.");
+
         ValidateUpdate(petId, date, reason, status);
 
         PetId = petId;
