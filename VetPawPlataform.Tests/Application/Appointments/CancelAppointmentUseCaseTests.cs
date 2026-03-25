@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
 using VetPawPlatform.Application.UseCases.Appointments.CancelAppointment;
+using VetPawPlatform.Domain.Entities;
 using VetPawPlatform.Domain.Enums;
 using VetPawPlatform.Domain.Exceptions;
 using VetPawPlatform.Domain.Interfaces;

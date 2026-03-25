@@ -1,4 +1,5 @@
-﻿using VetPawPlatform.Domain.Enums;
+﻿using VetPawPlatform.Domain.Entities;
+using VetPawPlatform.Domain.Enums;
 
 namespace VetPawPlatform.Tests.Builders;
 

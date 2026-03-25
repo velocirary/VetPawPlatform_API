@@ -2,6 +2,7 @@
 using Moq;
 using VetPawPlatform.Application.Dto.Pets;
 using VetPawPlatform.Application.UseCases.Appointments.RescheduleAppointment;
+using VetPawPlatform.Domain.Entities;
 using VetPawPlatform.Domain.Enums;
 using VetPawPlatform.Domain.Exceptions;
 using VetPawPlatform.Domain.Interfaces;
