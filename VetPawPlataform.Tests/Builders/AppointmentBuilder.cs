@@ -20,8 +20,7 @@ public class AppointmentBuilder
             _petId,
             _ownerId,
             _date,
-            _reason,
-            _status
+            _reason           
         );
     }
     public AppointmentBuilder WithId(Guid id)

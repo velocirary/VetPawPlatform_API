@@ -12,8 +12,7 @@ public class CreateAppointmentUseCase(IAppointmentRepository repository)
             dto.PetId,
             dto.OwnerId,
             dto.Date,
-            dto.Reason ?? string.Empty,
-            dto.Status
+            dto.Reason ?? string.Empty
         );
 
         await repository.CreateAsync(appointment);
