@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\VetPawPlataform.Infra.DynamoDB\VetPawPlatform.Infra.DynamoDB.csproj" />
     <ProjectReference Include="..\VetPawPlatform.Application\VetPawPlatform.Application.csproj" />
+    <ProjectReference Include="..\VetPawPlatform.Infra.Security\VetPawPlatform.Infra.Security.csproj" />
   </ItemGroup>
 
   <ItemGroup>

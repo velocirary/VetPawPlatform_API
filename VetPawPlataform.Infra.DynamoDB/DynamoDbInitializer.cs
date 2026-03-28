@@ -22,11 +22,11 @@ public class DynamoDbInitializer(IAmazonDynamoDB dynamoDb)
         var request = new CreateTableRequest
         {
             TableName = tableName,
-            AttributeDefinitions = new List<AttributeDefinition>
-        {
+            AttributeDefinitions =
+        [
             new() { AttributeName = "Id", AttributeType = ScalarAttributeType.S },
             new() { AttributeName = "Document", AttributeType = ScalarAttributeType.S }
-        },
+        ],
             KeySchema =
         [
             new() { AttributeName = "Id", KeyType = KeyType.HASH }
