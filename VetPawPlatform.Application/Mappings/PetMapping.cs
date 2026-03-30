@@ -1,5 +1,4 @@
-﻿using VetPawPlatform.Domain.Entities;
-using VetPawPlatform.Application.Dto.Pets;
+﻿using VetPawPlatform.Application.Dto.Pets;
 
 namespace VetPawPlatform.Application.Mappings;
 

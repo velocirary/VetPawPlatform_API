@@ -4,6 +4,6 @@ namespace VetPawPlatform.Domain.Interfaces;
 
 public interface IUserRepository
 {
-    Task<User?> GetByEmail(string email);
-    Task Create(User user);
+    Task<User?> GetByEmailAsync(string email);
+    Task CreateAsync(User user);
 }

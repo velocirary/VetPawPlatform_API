@@ -1,3 +1,6 @@
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using VetPawPlatform.Application.Common.Security;
 using VetPawPlatform.Application.DependencyInjection;
 using VetPawPlatform.Domain.Exceptions;
 using VetPawPlatform.Infra.DynamoDB;
@@ -12,6 +15,33 @@ var allowedOrigins = builder.Configuration
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var jwtSettings = builder.Configuration
+    .GetSection("JwtSettings")
+    .Get<JwtSettings>()
+    ?? throw new Exception("JwtSettings not configured");
+
+var key = Encoding.UTF8.GetBytes(jwtSettings.Secret);
+
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+
+            ValidateIssuer = true,
+            ValidIssuer = jwtSettings.Issuer,
+
+            ValidateAudience = true,
+            ValidAudience = jwtSettings.Audience,
+
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+
+    });
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -50,6 +80,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("AngularPolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

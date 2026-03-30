@@ -9,7 +9,7 @@ public static class DependencyInjection
     public static IServiceCollection AddSecurity(this IServiceCollection services, string jwtSecret)
     {
         services.AddScoped<IPasswordHasher, PasswordHasher>();
-        services.AddScoped<IJwtService>(sp => new JwtService(jwtSecret));        
+        services.AddScoped<IJwtService, JwtService>();
 
         return services;
     }

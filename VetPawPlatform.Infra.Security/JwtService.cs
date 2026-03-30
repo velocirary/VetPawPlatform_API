@@ -1,19 +1,25 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using VetPawPlatform.Application.Common.Security;
 
 namespace VetPawPlatform.Infra.Security;
 
-public class JwtService(string secret) : IJwtService
+public class JwtService : IJwtService
 {
-    private readonly string _secret = secret;
+    private readonly JwtSettings _settings;
+
+    public JwtService(IOptions<JwtSettings> settings)
+    {
+        _settings = settings.Value;
+    }
 
     public string GenerateToken(Guid userId, string email, string role)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Secret));
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
         {
@@ -23,9 +29,11 @@ public class JwtService(string secret) : IJwtService
         };
 
         var token = new JwtSecurityToken(
+            issuer: _settings.Issuer,
+            audience: _settings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(2),
-            signingCredentials: creds
+            expires: DateTime.UtcNow.AddHours(_settings.ExpirationHours),
+            signingCredentials: credentials
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
